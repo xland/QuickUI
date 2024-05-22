@@ -7,21 +7,19 @@
     </head>
     <body>
         <div id="menuBox">
-            <div id="menu_window" class="menuSelected">Window</div>
+            <div id="menu_home" class="menuSelected">Home</div>
+            <div id="menu_window">Window</div>
             <div id="menu_clipboard">Clipboard</div>
             <div id="menu_info">Information</div>
         </div>
-        <div id="box_window" class="contentBox contentBoxSelected">
+        <div id="box_home" class="contentBox contentBoxSelected">
+            <div class="homeLine">Ctrl+Shift+I to open DevTool</div>
+        </div>
+        <div id="box_window" class="contentBox">
             <div class="demoBtn" id="windowSizeChange">改变窗口大小到800*600</div>
-            <div class="demoBtn" id="hideShowWindow">窗口隐藏，3秒钟之后窗口再显示</div>
-            <div class="demoBtn" id="maximizeWindow">最大化窗口</div>
-            <div class="demoBtn" id="restoreWindow">还原窗口</div>
-            <div class="demoBtn" id="minimizeWindow">最小化窗口</div>
             <div class="demoBtn" id="closeWindow">关闭窗口</div>
             <div class="demoBtn" id="openWindow">打开一个新窗口</div>
             <div class="demoBtn" id="centerWindow">移动窗口到屏幕中央</div>
-            <div class="demoBtn" id="openDevTool">打开调试器窗口</div>
-            <div class="demoBtn" id="closeDevTool">关闭调试器窗口</div>
         </div>
         <div id="box_clipboard" class="contentBox">
             <div class="demoBtn" id="getClipboardText">获取剪切板内的文本信息</div>

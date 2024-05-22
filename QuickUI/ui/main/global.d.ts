@@ -5,8 +5,8 @@ declare global {
     setPosition(x: number, y: number): void;
     show(url: string): void;
     bind(id: string, cb: Function): void;
+    close(): void;
   }
-  module std {}
 }
 
 export {};

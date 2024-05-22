@@ -50,6 +50,7 @@ body {
   flex-direction: column;
   overflow: hidden;
   display: none;
+  padding: 6px;
   .demoBtn {
     display: inline-block;
     margin: 8px 8px;
@@ -73,4 +74,12 @@ body {
 }
 .contentBoxSelected {
   display: block;
+}
+#box_home {
+  line-height: 38px;
+  color: #333;
+  .homeLine {
+    height: 38px;
+    text-align: center;
+  }
 }

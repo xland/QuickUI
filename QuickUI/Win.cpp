@@ -56,6 +56,15 @@ JSValue show(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv)
 	}
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
+JSValue hide(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+	const char* str = JS_ToCString(ctx, argv[0]);
+	if (str) {
+		auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+		webui_set_hide(winId, true);
+		JS_FreeCString(ctx, str);
+	}
+	return MakeVal(0, JS_TAG_UNDEFINED);
+}
 
 JSValue setSize(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	
@@ -142,6 +151,7 @@ void Reg(JSContext* ctx)
 	JS_NewClass(rt, id, &js_win_class);
 	JSValue protoInstance = JS_NewObject(ctx);
 	JS_SetPropertyStr(ctx, protoInstance, "show", JS_NewCFunction(ctx, show, "show", 1));
+	JS_SetPropertyStr(ctx, protoInstance, "hide", JS_NewCFunction(ctx, hide, "hide", 0));
 	JS_SetPropertyStr(ctx, protoInstance, "setSize", JS_NewCFunction(ctx, setSize, "setSize", 2));
 	JS_SetPropertyStr(ctx, protoInstance, "setPosition", JS_NewCFunction(ctx, setPosition, "setPosition", 2));
 	JS_SetPropertyStr(ctx, protoInstance, "setRootFolder", JS_NewCFunction(ctx, setRootFolder, "setRootFolder", 1));
