@@ -9,4 +9,7 @@ win.bind("windowSizeChange", () => {
 win.bind("closeWindow", () => {
     win.close();
 });
+win.bind("close", () => {
+    win.close();
+});
 globalThis.win = win;

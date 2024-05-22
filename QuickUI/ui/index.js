@@ -15,4 +15,11 @@
         var box = document.getElementById("box_" + id);
         box.classList.add("contentBoxSelected");
     });
+    var closeWindow = document.getElementById("closeWindow");
+    closeWindow.addEventListener("click", function (e) {
+        var flag = confirm("Debug version can not close window\n Are you sure you want to close this window?");
+        if (flag) {
+            webui.close();
+        }
+    });
 })(globalThis);

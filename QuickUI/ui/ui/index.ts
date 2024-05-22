@@ -13,4 +13,11 @@
     let box = document.getElementById("box_" + id) as HTMLElement;
     box.classList.add("contentBoxSelected");
   });
+  let closeWindow = document.getElementById("closeWindow") as HTMLElement;
+  closeWindow.addEventListener("click", (e) => {
+    let flag = confirm("Debug version can not close window\n Are you sure you want to close this window?");
+    if (flag) {
+      webui.close();
+    }
+  });
 })(globalThis);
