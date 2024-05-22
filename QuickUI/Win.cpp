@@ -30,14 +30,14 @@ static JSClassDef js_win_class = {
 	}}
 };
 
-JSValue Close(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+JSValue close(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
 	webui_close(winId);
 	winIds.erase(std::remove(winIds.begin(), winIds.end(), winId), winIds.end());
 	return JS_NewBool(ctx, true);
 }
 
-JSValue SetRootFolder(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {	
+JSValue setRootFolder(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {	
 	const char* str = JS_ToCString(ctx, argv[0]);
 	if (str) {
 		auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
@@ -47,7 +47,7 @@ JSValue SetRootFolder(JSContext* ctx, JSValueConst thisVal, int argc, JSValueCon
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 
-JSValue Show(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {	
+JSValue show(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {	
 	const char* str = JS_ToCString(ctx, argv[0]);
 	if (str) {
 		auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
@@ -57,7 +57,7 @@ JSValue Show(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv)
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 
-JSValue SetSize(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+JSValue setSize(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	
 	unsigned int w, h;
 	if (JS_ToUint32(ctx, &w, argv[0])){
@@ -70,7 +70,7 @@ JSValue SetSize(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* ar
 	webui_set_size(winId, w,h);
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
-JSValue SetPosition(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+JSValue setPosition(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 
 	unsigned int x, y;
 	if (JS_ToUint32(ctx, &x, argv[0])) {
@@ -85,7 +85,7 @@ JSValue SetPosition(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst
 }
 
 
-JSValue Navigate(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+JSValue navigate(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	const char* str = JS_ToCString(ctx, argv[0]);
 	if (str) {
 		auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
@@ -95,7 +95,7 @@ JSValue Navigate(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* a
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 
-JSValue Run(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+JSValue run(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	const char* str = JS_ToCString(ctx, argv[0]);
 	if (str) {
 		auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
@@ -104,7 +104,7 @@ JSValue Run(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) 
 	}
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
-JSValue Bind(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+JSValue bind(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	const char* eleId = JS_ToCString(ctx, argv[0]);
 	if (!eleId) {
 		return JS_ThrowTypeError(ctx, "arg 0 error");
@@ -141,14 +141,14 @@ void Reg(JSContext* ctx)
 	JS_NewClassID(rt,&id);
 	JS_NewClass(rt, id, &js_win_class);
 	JSValue protoInstance = JS_NewObject(ctx);
-	JS_SetPropertyStr(ctx, protoInstance, "show", JS_NewCFunction(ctx, Show, "show", 1));
-	JS_SetPropertyStr(ctx, protoInstance, "setSize", JS_NewCFunction(ctx, SetSize, "setSize", 2));
-	JS_SetPropertyStr(ctx, protoInstance, "setPosition", JS_NewCFunction(ctx, SetPosition, "setPosition", 2));
-	JS_SetPropertyStr(ctx, protoInstance, "setRootFolder", JS_NewCFunction(ctx, SetRootFolder, "setRootFolder", 1));
-	JS_SetPropertyStr(ctx, protoInstance, "navigate", JS_NewCFunction(ctx, Navigate, "navigate", 1));
-	JS_SetPropertyStr(ctx, protoInstance, "close", JS_NewCFunction(ctx, Close, "close", 0));
-	JS_SetPropertyStr(ctx, protoInstance, "run", JS_NewCFunction(ctx, Run, "run", 1));
-	JS_SetPropertyStr(ctx, protoInstance, "bind", JS_NewCFunction(ctx, Bind, "bind", 2));
+	JS_SetPropertyStr(ctx, protoInstance, "show", JS_NewCFunction(ctx, show, "show", 1));
+	JS_SetPropertyStr(ctx, protoInstance, "setSize", JS_NewCFunction(ctx, setSize, "setSize", 2));
+	JS_SetPropertyStr(ctx, protoInstance, "setPosition", JS_NewCFunction(ctx, setPosition, "setPosition", 2));
+	JS_SetPropertyStr(ctx, protoInstance, "setRootFolder", JS_NewCFunction(ctx, setRootFolder, "setRootFolder", 1));
+	JS_SetPropertyStr(ctx, protoInstance, "navigate", JS_NewCFunction(ctx, navigate, "navigate", 1));
+	JS_SetPropertyStr(ctx, protoInstance, "close", JS_NewCFunction(ctx, close, "close", 0));
+	JS_SetPropertyStr(ctx, protoInstance, "run", JS_NewCFunction(ctx, run, "run", 1));
+	JS_SetPropertyStr(ctx, protoInstance, "bind", JS_NewCFunction(ctx, bind, "bind", 2));
 	JSValue ctroInstance = JS_NewCFunction2(ctx, &Win::Constructor, js_win_class.class_name, 0, JS_CFUNC_constructor,0);
 	JS_SetConstructor(ctx, ctroInstance, protoInstance);
 	JS_SetClassProto(ctx, id, protoInstance);

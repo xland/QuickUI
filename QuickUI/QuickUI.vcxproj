@@ -153,7 +153,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="build.md" />
-    <CopyFileToFolders Include="main.js" />
     <None Include="todo.md" />
   </ItemGroup>
   <ItemGroup>

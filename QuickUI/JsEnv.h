@@ -12,11 +12,9 @@ public:
 	static void Dispose();
 	static JsEnv* Get();
 	static JSContext* GetContext();
-	static int RegModel(JSContext* ctx, JSModuleDef* m);
-	~JsEnv();
-	static void LoadIndexJs(JSContext* ctx);
 
 private:
+	static void loadIndexJs(JSContext* ctx);
 	JsEnv();
 };
 

@@ -55,7 +55,4 @@
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <CopyFileToFolders Include="main.js" />
-  </ItemGroup>
 </Project>

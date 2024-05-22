@@ -20,8 +20,24 @@ namespace Global {
 		return MakeVal(0, JS_TAG_UNDEFINED);
 	}
 
+	JSContext* JsNewCustomContext(JSRuntime* rt)
+	{
+		JSContext* ctx = JS_NewContext(rt);
+		if (!ctx) {
+			fprintf(stderr, "Failed to create context\n");
+			JS_FreeRuntime(rt);
+			return nullptr;
+		}
+		return ctx;
+	}
+
 	void Global::Reg(JSContext* ctx)
 	{
+		auto rt = JS_GetRuntime(ctx);
+		js_std_set_worker_new_context_func(JsNewCustomContext);
+		js_std_init_handlers(rt);
+		JS_SetModuleLoaderFunc(rt, NULL, js_module_loader, NULL);
+
 		js_init_module_std(ctx, "std");
 		js_std_add_helpers(ctx, 0, nullptr);
 		js_init_module_os(ctx, "os");
