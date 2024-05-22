@@ -1,0 +1,76 @@
+html,
+body {
+  margin: 0px;
+  padding: 0px;
+}
+body {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  font-size: 13px;
+  font-family: "Microsoft YaHei";
+}
+
+#menuBox {
+  background: rgb(219, 237, 255);
+  width: 180px;
+  line-height: 38px;
+  padding: 8px 0px;
+  div {
+    cursor: pointer;
+    padding-left: 16px;
+    border-left: 4px solid transparent;
+    &:hover {
+      background: rgb(140, 200, 255);
+      color: #fff;
+      border-left: 4px solid rgb(121, 184, 255);
+    }
+  }
+  .menuSelected {
+    background: rgb(33, 136, 255) !important;
+    color: #fff;
+    border-left: 4px solid rgb(0, 92, 197) !important;
+    position: relative;
+    &::after {
+      display: block;
+      width: 0px;
+      height: 0px;
+      position: absolute;
+      right: 0px;
+      top: calc(50% - 4px);
+      border-top: solid 4px transparent;
+      border-right: solid 4px #fff;
+      border-bottom: solid 4px transparent;
+      content: "";
+    }
+  }
+}
+.contentBox {
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  display: none;
+  .demoBtn {
+    display: inline-block;
+    margin: 8px 8px;
+    border-radius: 3px;
+    padding: 0px 16px;
+    border: 1px solid rgb(140, 200, 255);
+    cursor: pointer;
+    height: 32px;
+    line-height: 32px;
+  }
+  .demoBtn:hover {
+    background: rgb(33, 136, 255);
+    border: 1px solid rgb(33, 136, 255);
+    color: #fff;
+  }
+  .demoBtn:active {
+    background: rgb(3, 102, 214);
+    border: 1px solid rgb(3, 102, 214);
+    color: #fff;
+  }
+}
+.contentBoxSelected {
+  display: block;
+}

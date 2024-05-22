@@ -44,6 +44,7 @@ JsEnv* JsEnv::Get()
     return env;
 }
 
+
 JSContext* JsEnv::GetContext()
 {
     return ctx;

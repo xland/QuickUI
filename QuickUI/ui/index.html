@@ -4,10 +4,40 @@
         <title>QuickUI-Demo</title>
         <link rel="stylesheet" href="index.css">
         <script src="webui.js"></script>
-        <script src="index.js"></script>
     </head>
     <body>
-        测试测试!!!!
-        <div id="btnId">btn</div>
+        <div id="menuBox">
+            <div id="menu_window" class="menuSelected">Window</div>
+            <div id="menu_clipboard">Clipboard</div>
+            <div id="menu_info">Information</div>
+        </div>
+        <div id="box_window" class="contentBox contentBoxSelected">
+            <div class="demoBtn" id="windowSizeChange">改变窗口大小到800*600</div>
+            <div class="demoBtn" id="hideShowWindow">窗口隐藏，3秒钟之后窗口再显示</div>
+            <div class="demoBtn" id="maximizeWindow">最大化窗口</div>
+            <div class="demoBtn" id="restoreWindow">还原窗口</div>
+            <div class="demoBtn" id="minimizeWindow">最小化窗口</div>
+            <div class="demoBtn" id="closeWindow">关闭窗口</div>
+            <div class="demoBtn" id="openWindow">打开一个新窗口</div>
+            <div class="demoBtn" id="centerWindow">移动窗口到屏幕中央</div>
+            <div class="demoBtn" id="openDevTool">打开调试器窗口</div>
+            <div class="demoBtn" id="closeDevTool">关闭调试器窗口</div>
+        </div>
+        <div id="box_clipboard" class="contentBox">
+            <div class="demoBtn" id="getClipboardText">获取剪切板内的文本信息</div>
+            <div class="demoBtn" id="getClipboardFile">获取剪切板内的文件路径</div>
+            <div class="demoBtn" id="getClipboardHTML">获取剪切板内的HTML</div>
+            <div class="demoBtn" id="setClipboardText">向剪切板写入字符串</div>
+            <div class="demoBtn" id="setClipboardFile">向剪切板写入文件</div>
+            <div class="demoBtn" id="setClipboardHTML">向剪切板写入HTML</div>
+        </div>
+        <div id="box_info" class="contentBox">
+            <div class="demoBtn" id="getAppInfo">获取应用的配置信息</div>
+            <div class="demoBtn" id="getHorseInfo">获取框架的版本信息</div>
+            <div class="demoBtn" id="getOSInfo">获取操作系统的基本信息</div>
+            <div class="demoBtn" id="getUserInfo">获取用户的基本信息</div>
+            <div class="demoBtn" id="getNetInfo">获取网络的基本信息</div>
+        </div>
+        <script src="index.js"></script>
     </body>
 </html>

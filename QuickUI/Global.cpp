@@ -39,7 +39,6 @@ namespace Global {
 		JS_SetModuleLoaderFunc(rt, NULL, js_module_loader, NULL);
 
 		js_init_module_std(ctx, "std");
-		js_std_add_helpers(ctx, 0, nullptr);
 		js_init_module_os(ctx, "os");
 
 		JSValue globalObj = JS_GetGlobalObject(ctx);
@@ -47,5 +46,7 @@ namespace Global {
 		JS_SetPropertyStr(ctx, consoleObj, "log", JS_NewCFunction(ctx, jsConsoleLog, "log", 1));
 		JS_SetPropertyStr(ctx, globalObj, "console", consoleObj);
 		JS_FreeValue(ctx, globalObj);
+
+		js_std_loop(ctx);
 	}
 }

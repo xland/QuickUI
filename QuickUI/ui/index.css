@@ -1,0 +1,79 @@
+html,
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+body {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  font-size: 13px;
+  font-family: "Microsoft YaHei";
+}
+
+#menuBox {
+  background: #dbedff;
+  width: 180px;
+  line-height: 38px;
+  padding: 8px 0px;
+}
+#menuBox div {
+  cursor: pointer;
+  padding-left: 16px;
+  border-left: 4px solid transparent;
+}
+#menuBox div:hover {
+  background: #8cc8ff;
+  color: #fff;
+  border-left: 4px solid #79b8ff;
+}
+#menuBox .menuSelected {
+  background: #2188ff !important;
+  color: #fff;
+  border-left: 4px solid #005cc5 !important;
+  position: relative;
+}
+#menuBox .menuSelected::after {
+  display: block;
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  right: 0px;
+  top: calc(50% - 4px);
+  border-top: solid 4px transparent;
+  border-right: solid 4px #fff;
+  border-bottom: solid 4px transparent;
+  content: "";
+}
+
+.contentBox {
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  display: none;
+}
+.contentBox .demoBtn {
+  display: inline-block;
+  margin: 8px 8px;
+  border-radius: 3px;
+  padding: 0px 16px;
+  border: 1px solid #8cc8ff;
+  cursor: pointer;
+  height: 32px;
+  line-height: 32px;
+}
+.contentBox .demoBtn:hover {
+  background: #2188ff;
+  border: 1px solid #2188ff;
+  color: #fff;
+}
+.contentBox .demoBtn:active {
+  background: #0366d6;
+  border: 1px solid #0366d6;
+  color: #fff;
+}
+
+.contentBoxSelected {
+  display: block;
+}
