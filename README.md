@@ -1,2 +1,5 @@
 # QuickUI
-A GUI framework based on QuickJs and WebUI
+
+用JS创建桌面端应用
+
+这个项目用到了WebUI和QuickJS
