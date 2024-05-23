@@ -33,6 +33,9 @@
     <ClCompile Include="Global.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="WebUI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="build.md" />
@@ -54,5 +57,14 @@
     <ClInclude Include="Global.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="WebUI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="ui\index.css" />
+    <CopyFileToFolders Include="ui\index.html" />
+    <CopyFileToFolders Include="ui\index.js" />
+    <CopyFileToFolders Include="ui\main.js" />
   </ItemGroup>
 </Project>

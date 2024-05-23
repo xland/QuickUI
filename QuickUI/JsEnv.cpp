@@ -6,6 +6,7 @@
 #include <fstream>
 #include "Win.h"
 #include "Global.h"
+#include "WebUI.h"
 
 
 static JsEnv* env;
@@ -19,11 +20,13 @@ JsEnv::JsEnv()
         fprintf(stderr, "Failed to create runtime\n");
         return;
     }
+    JS_SetModuleLoaderFunc(rt, NULL, js_module_loader, NULL);
     ctx = Global::JsNewCustomContext(rt);
     Global::Reg(ctx);
+    WebUI::Reg(ctx);
     Win::Reg(ctx);
     loadIndexJs(ctx);
-    js_std_loop(ctx);
+    
 }
 
 void JsEnv::Dispose()

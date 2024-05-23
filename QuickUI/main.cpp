@@ -1,7 +1,4 @@
 ﻿#include <combaseapi.h>
-extern "C" {
-#include <webui.h>
-}
 #include "Util.h"
 #include "JsEnv.h"
 
@@ -14,8 +11,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     if (result != S_OK) {
         return 0;
     }
-    JsEnv::Init();    
-    webui_wait();
+    JsEnv::Init();
     JsEnv::Dispose();
     CoUninitialize();
     return 0;
