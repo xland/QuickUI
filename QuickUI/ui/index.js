@@ -19,7 +19,7 @@
     closeWindow.addEventListener("click", function (e) {
         var flag = confirm("Debug version can not close window\n Are you sure you want to close this window?");
         if (flag) {
-            webui.close();
+            webui.closeThisWindow();
         }
     });
 })(globalThis);

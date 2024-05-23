@@ -1,10 +1,14 @@
 "use strict";
 
-globalThis.win = new Win();
-globalThis.win.setRootFolder("ui");
-globalThis.win.setSize(800, 600);
-globalThis.win.setPosition(1024, 300);
-globalThis.win.show("index.html");
-globalThis.win.bind("btnId", function () {
-  console.log("allen,allen,allen");
+var win = new Win();
+win.setRootFolder("ui");
+win.setSize(960, 800);
+win.setPosition(1024, 300);
+win.bind("closeThisWindow", function () {
+  win.close();
 });
+win.bind("windowSizeChange", function () {
+  win.setSize(800, 600);
+});
+win.show("index.html");
+globalThis.win = win;

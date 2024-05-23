@@ -31,6 +31,10 @@ static JSClassDef js_win_class = {
 };
 
 JSValue close(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+#ifdef DEBUG
+	return JS_NewBool(ctx, false);
+#endif
+
 	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
 	webui_close(winId);
 	winIds.erase(std::remove(winIds.begin(), winIds.end(), winId), winIds.end());
