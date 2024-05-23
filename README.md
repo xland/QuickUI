@@ -21,7 +21,7 @@ webui.wait();
 # API
 
 
-<details><summary><h2>webui</h2></summary>
+## webui
 
 ### wait
 ```js
@@ -57,10 +57,8 @@ webui.setTimeout(0);
 // Now, wait() will never end.
 webui.wait();
 ```
-</details>
 
-
-<details><summary><h2>Win</h2></summary>
+## Win
 
 `Win` is a class.
 
@@ -135,10 +133,9 @@ win.setIcon(myIcon,myIconType);
 
 ### bind
 
-</details>
 
 
-<details><summary><h2>global</h2></summary>
+## global
 
 QuickJs doesn't have `console.log` but QuickUI do.
 
@@ -148,9 +145,8 @@ console.log("hello world!");
 webui.setTimeout(0); //set wait forever.
 webui.wait(); //now wait forever.
 ```
-</details>
 
-<details><summary><h2>os</h2></summary>
+## os
 
 QuickJs sets the `setTimeout` and `setInterval` methods inside the `os` module.
 
@@ -177,7 +173,6 @@ os.setInterval(() => {
 webui.setTimeout(0); //set wait forever.
 webui.wait(); //now wait forever.
 ```
-</details>
 
 # TypeScript Support
 
