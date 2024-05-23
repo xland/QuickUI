@@ -4,7 +4,7 @@
 - Based on [QuickJs](https://github.com/quickjs-ng/quickjs) and [WebUI](https://github.com/webui-dev/webui).
 - Allow you to use any browser as a GUI render engine.
 - Light weight (about **1M**) & Small memory footprint.
-- Feature rich (clipboard, tray, sqlite...)
+- Feature rich (clipboard, tray, sqlite...).
 
 # Quick Start
 
@@ -14,22 +14,17 @@ win.show("<html><script src=\"webui.js\"></script> Hello World! </html>");
 webui.wait();
 ```
 
-- Save this code in `main.js`
-- Place `main.js` in the same directory as `QuickUI.exe`
-- Start `QuickUI.exe`
+- Save this code in `main.js`.
+- Place `main.js` in the same directory as `QuickUI.exe`.
+- Start `QuickUI.exe`.
 
 # API
 
 ## webui
 
-### clean
-```js
-
-```
-
 ### wait
 ```js
-//main.js
+// main.js
 // If There is one or more browser window,
 // wait until all browser window get closed or when calling webui_exit().
 // else if the browser did not get started, wait() will break after 30 seconds.
@@ -38,27 +33,55 @@ webui.wait();
 
 ### exit
 ```js
-//main.js
+// main.js
 // Try to close all opened windows and make wait return. 
-// All WebUI memory resources will be freed, and this will makes WebUI unusable
+// All WebUI memory resources will be freed, and this will makes WebUI unusable.
 webui.exit();
 ```
 
 
 ### setTimeout
 ```js
-//main.js
-//Set wait 10 seconds for the browser to start.
+// main.js
+// Set wait 10 seconds for the browser to start.
 webui.setTimeout(10);
 // Now, After 10 seconds, if the browser did not get started, wait() will break.
 webui.wait();
 ```
 
 ```js
-//main.js
-//Set wait forever
+// main.js
+// Set wait forever
 webui.setTimeout(0);
 // Now, wait() will never end.
+webui.wait();
+```
+
+## Win
+
+`Win` is a class.
+
+### show
+```js
+// create window object.
+const win = new Win();
+// Show a window using embedded HTML.
+win.show("<html><script src=\"webui.js\"></script> Hello World! </html>");
+webui.wait();
+```
+```js
+// create window object.
+const win = new Win();
+// Show a window using a file.
+win.show("index.html");
+webui.wait();
+```
+
+### showBrowser
+```js
+const win = new Win();
+// Same as `win.show`. But using a specific web browser.
+win.showBrowser("index.html",);
 webui.wait();
 ```
 
@@ -101,4 +124,6 @@ webui.setTimeout(0); //set wait forever.
 webui.wait(); //now wait forever.
 ```
 
+# TypeScript Support
 
+global.d.ts

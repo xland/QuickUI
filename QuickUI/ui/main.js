@@ -1,5 +1,15 @@
-import * as os from "os";
-os.setTimeout(() => {
-    console.log("time out");
-}, 32000);
-webui.wait();
+let win = new Win();
+win.setRootFolder("ui");
+win.setSize(960, 800);
+win.setPosition(1024, 300);
+win.bind("closeThisWindow", () => {
+    win.close();
+});
+win.bind("windowSizeChange", () => {
+    win.setSize(800, 600);
+});
+win.bind("runScript", () => {
+    win.run("alert('Fast!');");
+});
+win.show("index.html");
+globalThis.win = win;
