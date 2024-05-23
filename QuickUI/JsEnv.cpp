@@ -55,7 +55,7 @@ JSContext* JsEnv::GetContext()
 
 void JsEnv::loadIndexJs(JSContext* ctx)
 {
-    auto mainFilePath = "ui/main.js";
+    auto mainFilePath = "main.js";
     size_t bufLen;
     uint8_t* buf = js_load_file(ctx, &bufLen, mainFilePath);
     if (!buf) {
