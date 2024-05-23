@@ -15,8 +15,8 @@ webui.wait();
 ```
 
 1. Save this code in `main.js`.
-2. Place `main.js` in the same directory as `QuickUI.exe`.
-3. Start `QuickUI.exe`.
+1. Place `main.js` in the same directory as `QuickUI.exe`.
+1. Start `QuickUI.exe`.
 
 # API
 
