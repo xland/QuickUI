@@ -20,7 +20,8 @@ webui.wait();
 
 # API
 
-## webui
+
+<details><summary><h2>webui</h2></summary>
 
 ### wait
 ```js
@@ -56,6 +57,9 @@ webui.setTimeout(0);
 // Now, wait() will never end.
 webui.wait();
 ```
+</details>
+
+
 
 ## Win
 
