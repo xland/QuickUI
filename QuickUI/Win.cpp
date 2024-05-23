@@ -97,15 +97,15 @@ JSValue showBrowser(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 
-JSValue hide(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
-	const char* str = JS_ToCString(ctx, argv[0]);
-	if (str) {
-		auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
-		webui_set_hide(winId, true);
-		JS_FreeCString(ctx, str);
-	}
-	return MakeVal(0, JS_TAG_UNDEFINED);
-}
+//JSValue hide(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+//	const char* str = JS_ToCString(ctx, argv[0]);
+//	if (str) {
+//		auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+//		webui_set_hide(winId, true);
+//		JS_FreeCString(ctx, str);
+//	}
+//	return MakeVal(0, JS_TAG_UNDEFINED);
+//}
 JSValue setKiosk(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	bool state = JS_ToBool(ctx, argv[0]);
 	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
@@ -243,7 +243,7 @@ void Reg(JSContext* ctx)
 	JSValue protoInstance = JS_NewObject(ctx);
 	JS_SetPropertyStr(ctx, protoInstance, "show", JS_NewCFunction(ctx, show, "show", 1));
 	JS_SetPropertyStr(ctx, protoInstance, "showBrowser", JS_NewCFunction(ctx, showBrowser, "showBrowser", 2));
-	JS_SetPropertyStr(ctx, protoInstance, "hide", JS_NewCFunction(ctx, hide, "hide", 0));
+	//JS_SetPropertyStr(ctx, protoInstance, "hide", JS_NewCFunction(ctx, hide, "hide", 0));
 	JS_SetPropertyStr(ctx, protoInstance, "setKiosk", JS_NewCFunction(ctx, setKiosk, "setKiosk", 1));
 	JS_SetPropertyStr(ctx, protoInstance, "setPublic", JS_NewCFunction(ctx, setPublic, "setPublic", 1));
 	JS_SetPropertyStr(ctx, protoInstance, "getUrl", JS_NewCFunction(ctx, getUrl, "getUrl", 0));

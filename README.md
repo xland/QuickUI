@@ -79,11 +79,60 @@ webui.wait();
 
 ### showBrowser
 ```js
-const win = new Win();
+//main.js
 // Same as `win.show`. But using a specific web browser.
-win.showBrowser("index.html",);
-webui.wait();
+// 0. No web browser
+// 1. Default recommended web browser
+// 2. Google Chrome
+// 3. Mozilla Firefox
+// 4. Microsoft Edge
+// 5. Apple Safari
+// 6. The Chromium Project
+// 7. Opera Browser
+// 8. The Brave Browser
+// 9. The Vivaldi Browser
+// 10. The Epic Browser
+// 11. The Yandex Browser
+// 12. Any Chromium based browser
+win.showBrowser("index.html",2);
 ```
+
+### setIcon
+```js
+// main.js
+// myIcon = "<svg>...</svg>"
+// myIconType = "image/svg+xml"
+// 
+// myIcon = "data:image/..."
+// myIconType = "image/png"
+win.setIcon(myIcon,myIconType);
+```
+
+### setPosition
+
+### setSize
+
+### navigate
+
+### getUrl
+
+### setKiosk
+
+### setPublic
+
+### setProxy
+
+### setRootFolder
+
+### close
+
+### destroy
+
+### run
+
+### bind
+
+
 
 ## global
 
@@ -126,4 +175,4 @@ webui.wait(); //now wait forever.
 
 # TypeScript Support
 
-global.d.ts
+The Declaration File : [webui.d.ts](https://github.com/xland/QuickUI/blob/main/QuickUI/ui/main/webui.d.ts)
