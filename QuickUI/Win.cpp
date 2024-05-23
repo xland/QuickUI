@@ -40,6 +40,15 @@ JSValue close(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv
 	winIds.erase(std::remove(winIds.begin(), winIds.end(), winId), winIds.end());
 	return JS_NewBool(ctx, true);
 }
+JSValue destroy(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+#ifdef DEBUG
+	return JS_NewBool(ctx, false);
+#endif
+	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	webui_destroy(winId);
+	winIds.erase(std::remove(winIds.begin(), winIds.end(), winId), winIds.end());
+	return JS_NewBool(ctx, true);
+}
 
 JSValue setRootFolder(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {	
 	const char* str = JS_ToCString(ctx, argv[0]);
@@ -60,6 +69,34 @@ JSValue show(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv)
 	}
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
+
+JSValue setProxy(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+	const char* server = JS_ToCString(ctx, argv[0]);
+	if (!server) {
+		return MakeVal(0, JS_TAG_EXCEPTION);
+	}
+	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	webui_set_proxy(winId, server);
+	JS_FreeCString(ctx, server);
+	return MakeVal(0, JS_TAG_UNDEFINED);
+}
+
+JSValue showBrowser(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+	const char* str = JS_ToCString(ctx, argv[0]);
+	if (!str) {
+		return MakeVal(0, JS_TAG_EXCEPTION);
+	}
+	unsigned int browserId;
+	if (JS_ToUint32(ctx, &browserId, argv[1])) {
+		JS_FreeCString(ctx, str);
+		return MakeVal(0, JS_TAG_EXCEPTION);
+	}
+	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	webui_show_browser(winId, str, browserId);
+	JS_FreeCString(ctx, str);
+	return MakeVal(0, JS_TAG_UNDEFINED);
+}
+
 JSValue hide(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	const char* str = JS_ToCString(ctx, argv[0]);
 	if (str) {
@@ -68,6 +105,24 @@ JSValue hide(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv)
 		JS_FreeCString(ctx, str);
 	}
 	return MakeVal(0, JS_TAG_UNDEFINED);
+}
+JSValue setKiosk(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+	bool state = JS_ToBool(ctx, argv[0]);
+	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	webui_set_kiosk(winId, state);
+	return MakeVal(0, JS_TAG_UNDEFINED);
+}
+JSValue setPublic(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+	bool state = JS_ToBool(ctx, argv[0]);
+	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	webui_set_public(winId, state);
+	return MakeVal(0, JS_TAG_UNDEFINED);
+}
+JSValue getUrl(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	const char* ret = webui_get_url(winId);
+	JSValue jsVal = JS_NewString(ctx, ret);
+	return jsVal;
 }
 
 JSValue setSize(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
@@ -81,6 +136,38 @@ JSValue setSize(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* ar
 	}
 	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
 	webui_set_size(winId, w,h);
+	return MakeVal(0, JS_TAG_UNDEFINED);
+}
+JSValue setIcon(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+	const char* icon = JS_ToCString(ctx, argv[0]);
+	if (!icon) {
+		return MakeVal(0, JS_TAG_EXCEPTION);
+	}
+	const char* iconType = JS_ToCString(ctx, argv[1]);
+	if (!iconType) {
+		JS_FreeCString(ctx, icon);
+		return MakeVal(0, JS_TAG_EXCEPTION);
+	}
+	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	webui_set_icon(winId, icon, iconType);
+	JS_FreeCString(ctx, icon);
+	JS_FreeCString(ctx, iconType);
+	return MakeVal(0, JS_TAG_UNDEFINED);
+}
+JSValue setProfile(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
+	const char* name = JS_ToCString(ctx, argv[0]);
+	if (!name) {
+		return MakeVal(0, JS_TAG_EXCEPTION);
+	}
+	const char* path = JS_ToCString(ctx, argv[1]);
+	if (!path) {
+		JS_FreeCString(ctx, path);
+		return MakeVal(0, JS_TAG_EXCEPTION);
+	}
+	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	webui_set_profile(winId, name, path);
+	JS_FreeCString(ctx, name);
+	JS_FreeCString(ctx, path);
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 JSValue setPosition(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
@@ -155,12 +242,20 @@ void Reg(JSContext* ctx)
 	JS_NewClass(rt, id, &js_win_class);
 	JSValue protoInstance = JS_NewObject(ctx);
 	JS_SetPropertyStr(ctx, protoInstance, "show", JS_NewCFunction(ctx, show, "show", 1));
+	JS_SetPropertyStr(ctx, protoInstance, "showBrowser", JS_NewCFunction(ctx, showBrowser, "showBrowser", 2));
 	JS_SetPropertyStr(ctx, protoInstance, "hide", JS_NewCFunction(ctx, hide, "hide", 0));
+	JS_SetPropertyStr(ctx, protoInstance, "setKiosk", JS_NewCFunction(ctx, setKiosk, "setKiosk", 1));
+	JS_SetPropertyStr(ctx, protoInstance, "setPublic", JS_NewCFunction(ctx, setPublic, "setPublic", 1));
+	JS_SetPropertyStr(ctx, protoInstance, "getUrl", JS_NewCFunction(ctx, getUrl, "getUrl", 0));
 	JS_SetPropertyStr(ctx, protoInstance, "setSize", JS_NewCFunction(ctx, setSize, "setSize", 2));
+	JS_SetPropertyStr(ctx, protoInstance, "setIcon", JS_NewCFunction(ctx, setIcon, "setIcon", 2));
+	JS_SetPropertyStr(ctx, protoInstance, "setProfile", JS_NewCFunction(ctx, setProfile, "setProfile", 2));
+	JS_SetPropertyStr(ctx, protoInstance, "setProxy", JS_NewCFunction(ctx, setProxy, "setProxy", 1));
 	JS_SetPropertyStr(ctx, protoInstance, "setPosition", JS_NewCFunction(ctx, setPosition, "setPosition", 2));
 	JS_SetPropertyStr(ctx, protoInstance, "setRootFolder", JS_NewCFunction(ctx, setRootFolder, "setRootFolder", 1));
 	JS_SetPropertyStr(ctx, protoInstance, "navigate", JS_NewCFunction(ctx, navigate, "navigate", 1));
 	JS_SetPropertyStr(ctx, protoInstance, "close", JS_NewCFunction(ctx, close, "close", 0));
+	JS_SetPropertyStr(ctx, protoInstance, "destroy", JS_NewCFunction(ctx, destroy, "destroy", 0));
 	JS_SetPropertyStr(ctx, protoInstance, "run", JS_NewCFunction(ctx, run, "run", 1));
 	JS_SetPropertyStr(ctx, protoInstance, "bind", JS_NewCFunction(ctx, bind, "bind", 2));
 	JSValue ctroInstance = JS_NewCFunction2(ctx, &Win::Constructor, js_win_class.class_name, 0, JS_CFUNC_constructor,0);

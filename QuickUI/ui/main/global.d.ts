@@ -5,6 +5,7 @@ declare global {
     setPosition(x: number, y: number): void;
     show(url: string): void;
     bind(id: string, cb: Function): void;
+    run(scriptStr: string): void;
     close(): void;
   }
 }

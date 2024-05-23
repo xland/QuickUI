@@ -8,5 +8,8 @@ win.bind("closeThisWindow", () => {
 win.bind("windowSizeChange", () => {
     win.setSize(800, 600);
 });
+win.bind("runScript", () => {
+    win.run("alert('Fast!');");
+});
 win.show("index.html");
 globalThis.win = win;
