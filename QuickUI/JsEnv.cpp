@@ -31,7 +31,7 @@ JsEnv::JsEnv()
 
 void JsEnv::Dispose()
 {
-    Win::Dispose();
+    Win::Dispose(rt);
     JS_FreeContext(ctx);
     JS_FreeRuntime(rt);
     delete env;

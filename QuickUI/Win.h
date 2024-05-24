@@ -6,6 +6,6 @@ extern "C" {
 namespace Win
 {
 	void Reg(JSContext* ctx);
-	void Dispose();
+	void Dispose(JSRuntime* rt);
 };
 

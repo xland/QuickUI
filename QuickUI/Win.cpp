@@ -8,14 +8,22 @@
 
 namespace Win {
 static JSClassID id{ 0 };
-std::vector<size_t> winIds;
-std::map<size_t, JSValue> callBacks;
+static std::map<size_t, JSValue> wins;
+
+static unsigned int getWinId(JSContext* ctx, JSValueConst thisVal) {
+	
+	JSValue prop = JS_GetPropertyStr(ctx, thisVal, "id");
+	unsigned int id;
+	JS_ToUint32(ctx, &id, prop);
+	JS_FreeValue(ctx, prop);
+	return id;
+}
 
 static JSClassDef js_win_class = {
 	.class_name{"Win"}, // 类名
 	.finalizer{[](JSRuntime* rt, JSValue val) {
+
 		//auto winId = *(size_t*)JS_GetOpaque(val, id);
-		//auto ctx = JsEnv::GetContext();
 		//for (const auto& pair : callBacks) {
 		//	JS_FreeValue(ctx, pair.second);
 		//	callBacks.erase(pair.first);
@@ -32,23 +40,24 @@ static JSClassDef js_win_class = {
 }
 };
 
+
+
 JSValue close(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 #ifdef DEBUG
 	return JS_NewBool(ctx, false);
 #endif
-
-	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	auto winId = getWinId(ctx, thisVal);
+	wins.erase(winId);
 	webui_close(winId);
-	winIds.erase(std::remove(winIds.begin(), winIds.end(), winId), winIds.end());
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 JSValue destroy(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 #ifdef DEBUG
 	return JS_NewBool(ctx, false);
 #endif
-	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	auto winId = getWinId(ctx, thisVal);
+	wins.erase(winId);
 	webui_destroy(winId);
-	winIds.erase(std::remove(winIds.begin(), winIds.end(), winId), winIds.end());
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 
@@ -64,11 +73,12 @@ JSValue setRootFolder(JSContext* ctx, JSValueConst thisVal, int argc, JSValueCon
 
 JSValue show(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {	
 	const char* str = JS_ToCString(ctx, argv[0]);
-	if (str) {
-		auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
-		webui_show(winId, str);
-		JS_FreeCString(ctx, str);
+	if (!str) {
+		return MakeVal(0, JS_TAG_EXCEPTION);
 	}
+	auto winId = getWinId(ctx,thisVal);
+	webui_show(winId, str);
+	JS_FreeCString(ctx, str);
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 
@@ -213,25 +223,30 @@ JSValue bind(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv)
 	if (!JS_IsFunction(ctx, argv[1])) {
 		return JS_ThrowTypeError(ctx, "arg 1 error");
 	}	
-	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	auto winId = getWinId(ctx, thisVal);
 
 	auto bindId = webui_bind(winId, eleId, [](webui_event_t* e) {
 		auto ctx = JsEnv::GetContext();
-
-		JSValue args[1] = { JS_NewObject(ctx) };
-		JS_SetPropertyStr(ctx, args[0], "windowId", JS_NewUint32(ctx,e->window));
-		JS_SetPropertyStr(ctx, args[0], "eventType", JS_NewUint32(ctx, e->event_type));
-		JS_SetPropertyStr(ctx, args[0], "elementId", JS_NewString(ctx, e->element));
-		JS_SetPropertyStr(ctx, args[0], "eventNumber", JS_NewUint32(ctx, e->event_number));
-		JS_SetPropertyStr(ctx, args[0], "bindId", JS_NewUint32(ctx, e->bind_id));
-		JSValue ret = JS_Call(ctx, callBacks[e->bind_id], MakeVal(0, JS_TAG_UNDEFINED), 1, args);				
+		JSValue arg = JS_NewObject(ctx);
+		JS_SetPropertyStr(ctx, arg, "windowId", JS_NewUint32(ctx,e->window));
+		JS_SetPropertyStr(ctx, arg, "eventType", JS_NewUint32(ctx, e->event_type));
+		JS_SetPropertyStr(ctx, arg, "elementId", JS_NewString(ctx, e->element));
+		JS_SetPropertyStr(ctx, arg, "eventNumber", JS_NewUint32(ctx, e->event_number));
+		JS_SetPropertyStr(ctx, arg, "bindId", JS_NewUint32(ctx, e->bind_id));
+		JSValue cbs = JS_GetPropertyStr(ctx, wins[e->window], "__cbs");
+		auto cb = JS_GetPropertyUint32(ctx, cbs, e->bind_id);
+		JSValue ret = JS_Call(ctx, cb, MakeVal(0, JS_TAG_UNDEFINED), 1, &arg);
 		if (JS_IsException(ret)) {
 			js_std_dump_error(ctx);
-		}			
+		}
+		JS_FreeValue(ctx, cbs);
+		JS_FreeValue(ctx, cb);
+		JS_FreeValue(ctx, arg);
 		JS_FreeValue(ctx, ret);
-		JS_FreeValue(ctx, args[0]);
 	});
-	callBacks.insert({ bindId,JS_DupValue(ctx, argv[1]) });
+	JSValue cbs = JS_GetPropertyStr(ctx, thisVal, "__cbs");
+	JS_SetPropertyUint32(ctx, cbs, bindId, JS_DupValue(ctx, argv[1]));
+	JS_FreeValue(ctx, cbs);
 	JS_FreeCString(ctx, eleId);
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
@@ -240,10 +255,9 @@ JSValue Constructor(JSContext* ctx, JSValueConst new_target, int argc, JSValueCo
 {
 	JSValue obj = JS_NewObjectClass(ctx, id);
 	auto winId = webui_new_window();
-	winIds.push_back(winId);
-	//JS_NewArray(ctx);
-	//JSValue arrayProp = JS_GetPropertyStr(ctx, obj, "myArray");
-	JS_SetOpaque(obj, (void*)&winIds.back());
+	JS_SetPropertyStr(ctx, obj, "id", JS_NewUint32(ctx,winId));
+	JS_SetPropertyStr(ctx, obj, "__cbs", JS_NewArray(ctx));
+	wins.insert({ winId,obj });
 	return obj;
 }
 
@@ -278,11 +292,7 @@ void Reg(JSContext* ctx)
 	JS_SetPropertyStr(ctx, global, js_win_class.class_name, ctroInstance);
 	JS_FreeValue(ctx, global);
 }
-void Dispose() {
-	for (const auto& [key, value] : callBacks) {
-		JS_FreeValue(JsEnv::GetContext(), value);
-	}
-	callBacks.clear();
-	winIds.clear();
+void Dispose(JSRuntime* rt) {
+	wins.clear();
 }
 }
