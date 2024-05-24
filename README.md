@@ -155,9 +155,27 @@ win.show("index.html");
 
 ### setPublic
 
+```js
+//Allow a specific window address to be accessible from a public network.
+win.setPublic(true);
+```
+
 ### setProxy
 
+```js
+//Set the web browser proxy_server to use. Need to be called before `webui_show()`.
+win.setProxy("http://127.0.0.1:8888");
+```
+
 ### setRootFolder
+
+```js
+//Set the web-server root folder path for a specific window.
+const win = new Win();
+win.setRootFolder("ui") //Path relative to QuickUI.exe or full path
+win.show("index.html");
+webui.wait();
+```
 
 ### close
 
@@ -188,7 +206,18 @@ win.run(`alert("hello world.");`);
 ```js
 // main.js
 // Bind a specific html element click event with a function. Empty element means all events.
-win.bind("domID", (e)=>{});
+let bindId = win.bind("domID", (e)=>{
+    console.log(e.bindId); //
+    console.log(e.windowId);
+    console.log(e.elementId); // "domID"
+    console.log(e.eventNumber); // increased when event occur
+    // 0: Window disconnection event
+    // 1: Window connection event
+    // 2: Mouse click event
+    // 3: Window navigation event
+    // 4: Function call event
+    console.log(e.eventType); //
+});
 ```
 
 ## global

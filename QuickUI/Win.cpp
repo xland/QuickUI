@@ -233,7 +233,9 @@ JSValue bind(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv)
 	JS_SetPropertyUint32(ctx, cbs, bindId, JS_DupValue(ctx, argv[1]));
 	JS_FreeValue(ctx, cbs);
 	JS_FreeCString(ctx, eleId);
-	return MakeVal(0, JS_TAG_UNDEFINED);
+
+	JSValue ret = JS_NewUint32(ctx, bindId);
+	return ret;
 }
 
 JSValue Constructor(JSContext* ctx, JSValueConst new_target, int argc, JSValueConst* argv)
