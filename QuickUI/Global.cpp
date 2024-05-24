@@ -9,10 +9,11 @@ extern "C" {
 namespace Global {
 
 	JSValue jsConsoleLog(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst* argv) {
+		printf("[Console]:    ");
 		for (int i = 0; i < argc; i++) {
 			const char* str = JS_ToCString(ctx, argv[i]);
 			if (str) {
-				printf("%s", str);
+				printf("  %s", str);
 				JS_FreeCString(ctx, str);
 			}
 		}

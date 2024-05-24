@@ -125,8 +125,7 @@ JSValue getUrl(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* arg
 	return jsVal;
 }
 
-JSValue setSize(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
-	
+JSValue setSize(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {	
 	unsigned int w, h;
 	if (JS_ToUint32(ctx, &w, argv[0])){
 		return MakeVal(0, JS_TAG_EXCEPTION);
@@ -215,7 +214,7 @@ JSValue bind(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv)
 	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
 	auto bindId = webui_bind(winId, eleId, [](webui_event_t* e) {
 		auto ctx = JsEnv::GetContext();
-		JSValue ret = JS_Call(ctx, callBacks[e->bind_id], MakeVal(0, JS_TAG_UNDEFINED), 0, NULL);
+		JSValue ret = JS_Call(ctx, callBacks[e->bind_id], MakeVal(0, JS_TAG_UNDEFINED), 1, NULL);
 		if (JS_IsException(ret)) {
 			js_std_dump_error(ctx);
 		}			

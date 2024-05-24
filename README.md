@@ -82,25 +82,26 @@ webui.wait();
 ```js
 //main.js
 // Same as `win.show`. But using a specific web browser.
-// 0. No web browser
-// 1. Default recommended web browser
-// 2. Google Chrome
-// 3. Mozilla Firefox
-// 4. Microsoft Edge
-// 5. Apple Safari
-// 6. The Chromium Project
-// 7. Opera Browser
-// 8. The Brave Browser
-// 9. The Vivaldi Browser
-// 10. The Epic Browser
-// 11. The Yandex Browser
-// 12. Any Chromium based browser
+// 0: No web browser
+// 1: Default recommended web browser
+// 2: Google Chrome
+// 3: Mozilla Firefox
+// 4: Microsoft Edge
+// 5: Apple Safari
+// 6: The Chromium Project
+// 7: Opera Browser
+// 8: The Brave Browser
+// 9: The Vivaldi Browser
+// 10: The Epic Browser
+// 11: The Yandex Browser
+// 12: Any Chromium based browser
 win.showBrowser("index.html",2);
 ```
 
 ### setIcon
 ```js
 // main.js
+// Set the default embedded HTML favicon.
 // myIcon = "<svg>...</svg>"
 // myIconType = "image/svg+xml"
 // 
@@ -111,13 +112,46 @@ win.setIcon(myIcon,myIconType);
 
 ### setPosition
 
+```js
+// main.js
+// Set the window position.
+win.setPosition(x,y);
+```
+
 ### setSize
+
+```js
+// main.js
+// Set the window size.
+win.setSize(width,height);
+```
 
 ### navigate
 
+```js
+// main.js
+// Navigate to a specific URL
+let url = "page.html";
+win.navigate(url);
+```
+
 ### getUrl
 
+```js
+// main.js
+// Get the full current URL.
+let url = win.getUrl(url);
+```
+
 ### setKiosk
+
+```js
+// main.js
+// Set the window in Kiosk mode
+const win = new Win();
+win.setKiosk(true);
+win.show("index.html");
+```
 
 ### setPublic
 
@@ -127,13 +161,35 @@ win.setIcon(myIcon,myIconType);
 
 ### close
 
+```js
+// main.js
+// Close a specific window only. The window object will still exist.
+win.close();
+```
+
 ### destroy
+
+```js
+// main.js
+// Close a specific window and free all memory resources.
+win.destroy();
+```
 
 ### run
 
+```js
+// main.js
+// Run JavaScript without waiting for the response.
+win.run(`alert("hello world.");`);
+```
+
 ### bind
 
-
+```js
+// main.js
+// Bind a specific html element click event with a function. Empty element means all events.
+win.bind("domID", (e)=>{});
+```
 
 ## global
 

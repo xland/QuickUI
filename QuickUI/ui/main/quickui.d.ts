@@ -23,10 +23,11 @@ declare global {
         12. Any Chromium based browser
      */
     showBrowser(val: string, browserType: number): void;
-    setIcon(icon: string, iconType: string);
+    setIcon(icon: string, iconType: string): void;
     bind(id: string, cb: Function): void;
     run(scriptStr: string): void;
     close(): void;
+    getUrl(): string;
   }
 }
 
