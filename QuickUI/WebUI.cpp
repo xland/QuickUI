@@ -18,7 +18,7 @@ namespace WebUI {
 	JSValue setTimeout(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst* argv) {
 		unsigned int second;
 		if (JS_ToUint32(ctx, &second, argv[0])) {
-			return MakeVal(0, JS_TAG_EXCEPTION);
+			return JS_ThrowTypeError(ctx, "arg0 error");
 		}
 		webui_set_timeout(second);
 		return MakeVal(0, JS_TAG_UNDEFINED);
@@ -29,10 +29,11 @@ namespace WebUI {
 	}
 	JSValue setDefaultRootFolder(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 		const char* str = JS_ToCString(ctx, argv[0]);
-		if (str) {
-			webui_set_default_root_folder(str);
-			JS_FreeCString(ctx, str);
+		if (!str) {
+			return JS_ThrowTypeError(ctx, "arg0 error");
 		}
+		webui_set_default_root_folder(str);
+		JS_FreeCString(ctx, str);
 		return MakeVal(0, JS_TAG_UNDEFINED);
 	}
 	void WebUI::Reg(JSContext* ctx)

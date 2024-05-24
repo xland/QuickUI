@@ -21,23 +21,7 @@ static unsigned int getWinId(JSContext* ctx, JSValueConst thisVal) {
 
 static JSClassDef js_win_class = {
 	.class_name{"Win"}, // 类名
-	.finalizer{[](JSRuntime* rt, JSValue val) {
-
-		//auto winId = *(size_t*)JS_GetOpaque(val, id);
-		//for (const auto& pair : callBacks) {
-		//	JS_FreeValue(ctx, pair.second);
-		//	callBacks.erase(pair.first);
-		//}
-
-		//callBacks.clear();
-		//webui_destroy(winId);
-		//winIds.erase(std::remove(winIds.begin(), winIds.end(), winId), winIds.end());
-		//todo js_free_rt已经帮我释放了资源，所以不能再delete win了
-		//如果win持有其它指针，得在这里写delete释放
-		//js_free_rt(rt, win);
-		//JS_FreeValue(JsEnv::GetContext(), val);
-	}
-}
+	.finalizer{[](JSRuntime* rt, JSValue val) { } }
 };
 
 
@@ -63,18 +47,19 @@ JSValue destroy(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* ar
 
 JSValue setRootFolder(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {	
 	const char* str = JS_ToCString(ctx, argv[0]);
-	if (str) {
-		auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
-		webui_set_root_folder(winId, str);
-		JS_FreeCString(ctx, str);
+	if (!str) {
+		return JS_ThrowTypeError(ctx, "arg error");
 	}
+	auto winId = getWinId(ctx, thisVal);
+	webui_set_root_folder(winId, str);
+	JS_FreeCString(ctx, str);
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 
 JSValue show(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {	
 	const char* str = JS_ToCString(ctx, argv[0]);
 	if (!str) {
-		return MakeVal(0, JS_TAG_EXCEPTION);
+		return JS_ThrowTypeError(ctx, "arg error");
 	}
 	auto winId = getWinId(ctx,thisVal);
 	webui_show(winId, str);
@@ -85,9 +70,9 @@ JSValue show(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv)
 JSValue setProxy(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	const char* server = JS_ToCString(ctx, argv[0]);
 	if (!server) {
-		return MakeVal(0, JS_TAG_EXCEPTION);
+		return JS_ThrowTypeError(ctx, "arg error");
 	}
-	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	auto winId = getWinId(ctx, thisVal);
 	webui_set_proxy(winId, server);
 	JS_FreeCString(ctx, server);
 	return MakeVal(0, JS_TAG_UNDEFINED);
@@ -96,14 +81,14 @@ JSValue setProxy(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* a
 JSValue showBrowser(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	const char* str = JS_ToCString(ctx, argv[0]);
 	if (!str) {
-		return MakeVal(0, JS_TAG_EXCEPTION);
+		return JS_ThrowTypeError(ctx, "arg0 error");
 	}
 	unsigned int browserId;
 	if (JS_ToUint32(ctx, &browserId, argv[1])) {
 		JS_FreeCString(ctx, str);
-		return MakeVal(0, JS_TAG_EXCEPTION);
+		return JS_ThrowTypeError(ctx, "arg1 error");
 	}
-	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	auto winId = getWinId(ctx, thisVal);
 	webui_show_browser(winId, str, browserId);
 	JS_FreeCString(ctx, str);
 	return MakeVal(0, JS_TAG_UNDEFINED);
@@ -112,7 +97,7 @@ JSValue showBrowser(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst
 //JSValue hide(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 //	const char* str = JS_ToCString(ctx, argv[0]);
 //	if (str) {
-//		auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+//		auto winId = getWinId(ctx, thisVal);
 //		webui_set_hide(winId, true);
 //		JS_FreeCString(ctx, str);
 //	}
@@ -120,18 +105,18 @@ JSValue showBrowser(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst
 //}
 JSValue setKiosk(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	bool state = JS_ToBool(ctx, argv[0]);
-	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	auto winId = getWinId(ctx, thisVal);
 	webui_set_kiosk(winId, state);
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 JSValue setPublic(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	bool state = JS_ToBool(ctx, argv[0]);
-	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	auto winId = getWinId(ctx, thisVal);
 	webui_set_public(winId, state);
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 JSValue getUrl(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
-	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	auto winId = getWinId(ctx, thisVal);
 	const char* ret = webui_get_url(winId);
 	JSValue jsVal = JS_NewString(ctx, ret);
 	return jsVal;
@@ -140,26 +125,26 @@ JSValue getUrl(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* arg
 JSValue setSize(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {	
 	unsigned int w, h;
 	if (JS_ToUint32(ctx, &w, argv[0])){
-		return MakeVal(0, JS_TAG_EXCEPTION);
+		return JS_ThrowTypeError(ctx, "arg0 error");
 	}
 	if (JS_ToUint32(ctx, &h, argv[1])) {
-		return MakeVal(0, JS_TAG_EXCEPTION);
+		return JS_ThrowTypeError(ctx, "arg1 error");
 	}
-	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	auto winId = getWinId(ctx, thisVal);
 	webui_set_size(winId, w,h);
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 JSValue setIcon(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	const char* icon = JS_ToCString(ctx, argv[0]);
 	if (!icon) {
-		return MakeVal(0, JS_TAG_EXCEPTION);
+		return JS_ThrowTypeError(ctx, "arg0 error");
 	}
 	const char* iconType = JS_ToCString(ctx, argv[1]);
 	if (!iconType) {
 		JS_FreeCString(ctx, icon);
-		return MakeVal(0, JS_TAG_EXCEPTION);
+		return JS_ThrowTypeError(ctx, "arg1 error");
 	}
-	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	auto winId = getWinId(ctx, thisVal);
 	webui_set_icon(winId, icon, iconType);
 	JS_FreeCString(ctx, icon);
 	JS_FreeCString(ctx, iconType);
@@ -168,29 +153,28 @@ JSValue setIcon(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* ar
 JSValue setProfile(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	const char* name = JS_ToCString(ctx, argv[0]);
 	if (!name) {
-		return MakeVal(0, JS_TAG_EXCEPTION);
+		return JS_ThrowTypeError(ctx, "arg0 error");
 	}
 	const char* path = JS_ToCString(ctx, argv[1]);
 	if (!path) {
 		JS_FreeCString(ctx, path);
-		return MakeVal(0, JS_TAG_EXCEPTION);
+		return JS_ThrowTypeError(ctx, "arg1 error");
 	}
-	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	auto winId = getWinId(ctx, thisVal);
 	webui_set_profile(winId, name, path);
 	JS_FreeCString(ctx, name);
 	JS_FreeCString(ctx, path);
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 JSValue setPosition(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
-
 	unsigned int x, y;
 	if (JS_ToUint32(ctx, &x, argv[0])) {
-		return MakeVal(0, JS_TAG_EXCEPTION);
+		return JS_ThrowTypeError(ctx, "arg0 error");
 	}
 	if (JS_ToUint32(ctx, &y, argv[1])) {
-		return MakeVal(0, JS_TAG_EXCEPTION);
+		return JS_ThrowTypeError(ctx, "arg1 error");
 	}
-	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+	auto winId = getWinId(ctx, thisVal);
 	webui_set_position(winId, x, y);
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
@@ -198,33 +182,34 @@ JSValue setPosition(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst
 
 JSValue navigate(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	const char* str = JS_ToCString(ctx, argv[0]);
-	if (str) {
-		auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
-		webui_navigate(winId, str);
-		JS_FreeCString(ctx, str);
+	if (!str) {
+		return JS_ThrowTypeError(ctx, "arg error");
 	}
+	auto winId = getWinId(ctx, thisVal);
+	webui_navigate(winId, str);
+	JS_FreeCString(ctx, str);
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 
 JSValue run(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	const char* str = JS_ToCString(ctx, argv[0]);
-	if (str) {
-		auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
-		webui_run(winId, str);
-		JS_FreeCString(ctx, str);
+	if (!str) {
+		return JS_ThrowTypeError(ctx, "arg error");
 	}
+	auto winId = getWinId(ctx, thisVal);
+	webui_run(winId, str);
+	JS_FreeCString(ctx, str);
 	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 JSValue bind(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 	const char* eleId = JS_ToCString(ctx, argv[0]);
 	if (!eleId) {
-		return JS_ThrowTypeError(ctx, "arg 0 error");
+		return JS_ThrowTypeError(ctx, "arg0 error");
 	}
 	if (!JS_IsFunction(ctx, argv[1])) {
-		return JS_ThrowTypeError(ctx, "arg 1 error");
+		return JS_ThrowTypeError(ctx, "arg1 error");
 	}	
 	auto winId = getWinId(ctx, thisVal);
-
 	auto bindId = webui_bind(winId, eleId, [](webui_event_t* e) {
 		auto ctx = JsEnv::GetContext();
 		JSValue arg = JS_NewObject(ctx);
