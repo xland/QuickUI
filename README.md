@@ -4,7 +4,7 @@
 - Based on [QuickJs](https://github.com/quickjs-ng/quickjs) and [WebUI](https://github.com/webui-dev/webui).
 - Allow you to use any browser as a GUI render engine.
 - Light weight (about **1M**) & Small memory footprint.
-- Feature rich (clipboard, tray, sqlite...).
+- Feature rich.
 
 # Quick Start
 

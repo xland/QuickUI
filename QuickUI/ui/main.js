@@ -1,4 +1,3 @@
 const win = new Win();
-win.setRootFolder("ui")
-win.show("index.html");
+win.show("<html><script src=\"webui.js\"></script> Hello World! </html>");
 webui.wait();
