@@ -24,10 +24,13 @@ declare global {
      */
     showBrowser(val: string, browserType: number): void;
     setIcon(icon: string, iconType: string): void;
-    bind(id: string, cb: Function): void;
+    bind(id: string, cb: (e: { windowId: number; eventType: number; elementId: string; eventNumber: number; bindId: number }) => void): void;
     run(scriptStr: string): void;
     close(): void;
     getUrl(): string;
+  }
+  class webui {
+    static wait(): void;
   }
 }
 

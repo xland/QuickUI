@@ -14,12 +14,13 @@ std::map<size_t, JSValue> callBacks;
 static JSClassDef js_win_class = {
 	.class_name{"Win"}, // 类名
 	.finalizer{[](JSRuntime* rt, JSValue val) {
-		auto winId = *(size_t*)JS_GetOpaque(val, id);
-		auto ctx = JsEnv::GetContext();
-		for (const auto& [key, value] : callBacks) {
-			JS_FreeValue(ctx, value);
-			callBacks.erase(key);
-		}
+		//auto winId = *(size_t*)JS_GetOpaque(val, id);
+		//auto ctx = JsEnv::GetContext();
+		//for (const auto& pair : callBacks) {
+		//	JS_FreeValue(ctx, pair.second);
+		//	callBacks.erase(pair.first);
+		//}
+
 		//callBacks.clear();
 		//webui_destroy(winId);
 		//winIds.erase(std::remove(winIds.begin(), winIds.end(), winId), winIds.end());
@@ -27,7 +28,8 @@ static JSClassDef js_win_class = {
 		//如果win持有其它指针，得在这里写delete释放
 		//js_free_rt(rt, win);
 		//JS_FreeValue(JsEnv::GetContext(), val);
-	}}
+	}
+}
 };
 
 JSValue close(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
@@ -38,7 +40,7 @@ JSValue close(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv
 	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
 	webui_close(winId);
 	winIds.erase(std::remove(winIds.begin(), winIds.end(), winId), winIds.end());
-	return JS_NewBool(ctx, true);
+	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 JSValue destroy(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {
 #ifdef DEBUG
@@ -47,7 +49,7 @@ JSValue destroy(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* ar
 	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
 	webui_destroy(winId);
 	winIds.erase(std::remove(winIds.begin(), winIds.end(), winId), winIds.end());
-	return JS_NewBool(ctx, true);
+	return MakeVal(0, JS_TAG_UNDEFINED);
 }
 
 JSValue setRootFolder(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv) {	
@@ -212,13 +214,22 @@ JSValue bind(JSContext* ctx, JSValueConst thisVal, int argc, JSValueConst* argv)
 		return JS_ThrowTypeError(ctx, "arg 1 error");
 	}	
 	auto winId = *(size_t*)JS_GetOpaque(thisVal, id);
+
 	auto bindId = webui_bind(winId, eleId, [](webui_event_t* e) {
 		auto ctx = JsEnv::GetContext();
-		JSValue ret = JS_Call(ctx, callBacks[e->bind_id], MakeVal(0, JS_TAG_UNDEFINED), 1, NULL);
+
+		JSValue args[1] = { JS_NewObject(ctx) };
+		JS_SetPropertyStr(ctx, args[0], "windowId", JS_NewUint32(ctx,e->window));
+		JS_SetPropertyStr(ctx, args[0], "eventType", JS_NewUint32(ctx, e->event_type));
+		JS_SetPropertyStr(ctx, args[0], "elementId", JS_NewString(ctx, e->element));
+		JS_SetPropertyStr(ctx, args[0], "eventNumber", JS_NewUint32(ctx, e->event_number));
+		JS_SetPropertyStr(ctx, args[0], "bindId", JS_NewUint32(ctx, e->bind_id));
+		JSValue ret = JS_Call(ctx, callBacks[e->bind_id], MakeVal(0, JS_TAG_UNDEFINED), 1, args);				
 		if (JS_IsException(ret)) {
 			js_std_dump_error(ctx);
 		}			
 		JS_FreeValue(ctx, ret);
+		JS_FreeValue(ctx, args[0]);
 	});
 	callBacks.insert({ bindId,JS_DupValue(ctx, argv[1]) });
 	JS_FreeCString(ctx, eleId);
@@ -230,6 +241,8 @@ JSValue Constructor(JSContext* ctx, JSValueConst new_target, int argc, JSValueCo
 	JSValue obj = JS_NewObjectClass(ctx, id);
 	auto winId = webui_new_window();
 	winIds.push_back(winId);
+	//JS_NewArray(ctx);
+	//JSValue arrayProp = JS_GetPropertyStr(ctx, obj, "myArray");
 	JS_SetOpaque(obj, (void*)&winIds.back());
 	return obj;
 }
