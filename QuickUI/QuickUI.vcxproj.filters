@@ -60,11 +60,19 @@
     <ClInclude Include="WebUI.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="ui\index.css" />
     <CopyFileToFolders Include="ui\index.html" />
     <CopyFileToFolders Include="ui\index.js" />
     <CopyFileToFolders Include="ui\main.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="QuickUI.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -176,9 +176,13 @@
     <ClInclude Include="Fs.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="JsEnv.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="WebUI.h" />
     <ClInclude Include="Win.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="QuickUI.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
