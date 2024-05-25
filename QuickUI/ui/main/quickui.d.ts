@@ -1,9 +1,15 @@
 declare global {
+  class webui {
+    static setTimeout(second: number): void;
+    static exit(): void;
+    static wait(): void;
+  }
   class Win {
     setRootFolder(folder: string): void;
     setSize(w: number, h: number): void;
     setPosition(x: number, y: number): void;
     show(val: string): void;
+    navigate(url: string): void;
     /**
      * @param val
      *
@@ -27,10 +33,11 @@ declare global {
     bind(id: string, cb: (e: { windowId: number; eventType: number; elementId: string; eventNumber: number; bindId: number }) => void): void;
     run(scriptStr: string): void;
     close(): void;
+    destroy(): void;
     getUrl(): string;
-  }
-  class webui {
-    static wait(): void;
+    setKiosk(flag: boolean): void;
+    setPublic(flag: boolean): void;
+    setProxy(proxyServer: string): void;
   }
 }
 
