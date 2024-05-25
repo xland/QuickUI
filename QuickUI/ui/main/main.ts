@@ -1,12 +1,6 @@
-const win = new Win();
-win.bind("btn", (e) => {
-  console.log(e.bindId);
-  console.log(e.windowId);
-  console.log(e.elementId);
-  console.log(e.eventNumber);
-  console.log(e.eventType);
-  console.log(e.bindId);
-});
-win.show("<html><script src=\"webui.js\"></script><button id='btn'>click me</button></html>");
-webui.wait();
-globalThis.win = win;
+import * as os from "os";
+os.setInterval(() => {
+  console.log("interval");
+}, 1000);
+webui.setTimeout(0); //set wait forever.
+webui.wait(); //now wait forever.

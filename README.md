@@ -261,4 +261,7 @@ webui.wait(); //now wait forever.
 
 # TypeScript Support
 
-The Declaration File : [quick.d.ts](QuickUI/ui/main/quickui.d.ts)
+The Declaration File :
+
+- [quickui.d.ts](QuickUI/ui/main/quickui.d.ts)
+- [os.d.ts](QuickUI/ui/main/os.d.ts)
