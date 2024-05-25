@@ -7,6 +7,8 @@ extern "C" {
 void InitDebuger();
 #endif
 
+JSContext* JsNewCustomContext(JSRuntime* rt);
+
 constexpr JSCFunctionListEntry MakeJsFunc(const char* name, uint8_t length, JSCFunction* func) {
     return JSCFunctionListEntry{
         .name{name},

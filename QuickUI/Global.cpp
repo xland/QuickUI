@@ -21,17 +21,6 @@ namespace Global {
 		return MakeVal(0, JS_TAG_UNDEFINED);
 	}
 
-	JSContext* JsNewCustomContext(JSRuntime* rt)
-	{
-		JSContext* ctx = JS_NewContext(rt);
-		if (!ctx) {
-			fprintf(stderr, "Failed to create context\n");
-			JS_FreeRuntime(rt);
-			return nullptr;
-		}
-		return ctx;
-	}
-
 	void Global::Reg(JSContext* ctx)
 	{
 		auto rt = JS_GetRuntime(ctx);
@@ -44,6 +33,9 @@ namespace Global {
 		JSValue globalObj = JS_GetGlobalObject(ctx);
 		JSValue console = JS_NewObject(ctx);
 		JS_SetPropertyStr(ctx, console, "log", JS_NewCFunction(ctx, jsConsoleLog, "log", 1));
+		JS_SetPropertyStr(ctx, console, "warn", JS_NewCFunction(ctx, jsConsoleLog, "warn", 1));
+		JS_SetPropertyStr(ctx, console, "info", JS_NewCFunction(ctx, jsConsoleLog, "info", 1));
+		JS_SetPropertyStr(ctx, console, "error", JS_NewCFunction(ctx, jsConsoleLog, "error", 1));
 		JS_SetPropertyStr(ctx, globalObj, "console", console);
 		JS_FreeValue(ctx, globalObj);
 

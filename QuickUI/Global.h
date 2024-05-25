@@ -7,6 +7,5 @@ extern "C" {
 namespace Global
 {
 	void Reg(JSContext* ctx);
-	JSContext* JsNewCustomContext(JSRuntime* rt);
 };
 

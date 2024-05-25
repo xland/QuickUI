@@ -32,3 +32,14 @@ void InitDebuger() {
     }
 }
 #endif
+
+JSContext* JsNewCustomContext(JSRuntime* rt)
+{
+    JSContext* ctx = JS_NewContext(rt);
+    if (!ctx) {
+        fprintf(stderr, "Failed to create context\n");
+        JS_FreeRuntime(rt);
+        return nullptr;
+    }
+    return ctx;
+}

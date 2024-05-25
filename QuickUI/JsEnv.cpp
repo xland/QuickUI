@@ -7,6 +7,7 @@
 #include "Win.h"
 #include "Global.h"
 #include "WebUI.h"
+#include "Util.h"
 
 
 static JsEnv* env;
@@ -21,7 +22,7 @@ JsEnv::JsEnv()
         return;
     }
     JS_SetModuleLoaderFunc(rt, NULL, js_module_loader, NULL);
-    ctx = Global::JsNewCustomContext(rt);
+    ctx = JsNewCustomContext(rt);
     Global::Reg(ctx);
     WebUI::Reg(ctx);
     Win::Reg(ctx);
