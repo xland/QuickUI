@@ -1,7 +1,7 @@
 # QuickUI
 
 - Build desktop apps with JavaScript, HTML, and CSS.
-- Based on [QuickJs](https://github.com/quickjs-ng/quickjs) and [WebUI](https://github.com/webui-dev/webui).
+- Based on [QuickJS](https://github.com/quickjs-ng/quickjs) and [WebUI](https://github.com/webui-dev/webui).
 - Allow you to use any browser as a GUI render engine.
 - Light weight (about **1M**) & Small memory footprint.
 - Feature rich.
