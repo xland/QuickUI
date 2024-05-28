@@ -37,8 +37,6 @@ namespace Global {
 		JS_SetPropertyStr(ctx, console, "info", JS_NewCFunction(ctx, jsConsoleLog, "info", 1));
 		JS_SetPropertyStr(ctx, console, "error", JS_NewCFunction(ctx, jsConsoleLog, "error", 1));
 		JS_SetPropertyStr(ctx, globalObj, "console", console);
-		JS_FreeValue(ctx, globalObj);
-
-		
+		JS_FreeValue(ctx, globalObj);		
 	}
 }
