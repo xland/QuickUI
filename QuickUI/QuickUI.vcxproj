@@ -144,10 +144,12 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Clipboard.cpp" />
     <ClCompile Include="Fs.cpp" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="JsEnv.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Tray.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="WebUI.cpp" />
     <ClCompile Include="Win.cpp" />
@@ -173,10 +175,12 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Clipboard.h" />
     <ClInclude Include="Fs.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="JsEnv.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Tray.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="WebUI.h" />
     <ClInclude Include="Win.h" />
